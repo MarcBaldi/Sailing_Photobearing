@@ -9,8 +9,11 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
+    "getusermedia": "^2.0.1",
     "register-service-worker": "^1.7.1",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-cam": "^0.2.4",
+    "vue-camera": "^1.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
