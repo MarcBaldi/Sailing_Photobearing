@@ -32,8 +32,10 @@ function startup () {
   canvas = document.getElementById('canvas')
 
   navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: false
+    audio: false,
+    video: {
+      facingMode: 'environment'
+    }
   })
     .then(function (stream) {
       video.srcObject = stream
