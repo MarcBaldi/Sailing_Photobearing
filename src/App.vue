@@ -1,17 +1,20 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img id="vue-logo-example" alt="Vue logo" src="./assets/logo.png">
+    <CameraStream/>
+    <absolute-heading/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CameraStream from './components/CameraStream.vue'
+import AbsoluteHeading from './components/AbsoluteHeading'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    CameraStream,
+    AbsoluteHeading
   }
 }
 </script>
@@ -23,6 +26,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
+}
+#vue-logo-example {
+  z-index: 3;
 }
 </style>
