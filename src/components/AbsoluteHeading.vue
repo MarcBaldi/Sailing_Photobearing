@@ -2,7 +2,7 @@
     <div class="abs-heading">
       <div id="status"></div>
       <div id="compassContainer">
-        <img id="compass" src="../assets/logo2.png"/>
+        <img id="compass" alt="compass WIP" src="../assets/logo2.png"/>
       </div>
     </div>
 </template>
