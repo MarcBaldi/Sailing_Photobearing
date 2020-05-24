@@ -1,17 +1,20 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <img id="vue-logo-example" alt="Vue logo" src="./assets/logo.png">
     <CameraStream/>
+    <absolute-heading/>
   </div>
 </template>
 
 <script>
 import CameraStream from './components/CameraStream.vue'
+import AbsoluteHeading from './components/AbsoluteHeading'
 
 export default {
   name: 'App',
   components: {
-    CameraStream
+    CameraStream,
+    AbsoluteHeading
   }
 }
 </script>
@@ -25,7 +28,7 @@ export default {
   color: #2c3e50;
   margin-top: 10px;
 }
-img {
+#vue-logo-example {
   z-index: 3;
 }
 </style>
