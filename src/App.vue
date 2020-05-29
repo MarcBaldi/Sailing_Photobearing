@@ -2,15 +2,18 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <CameraStream/>
+    <SeaSigns/>
   </div>
 </template>
 
 <script>
 import CameraStream from './components/CameraStream.vue'
+import SeaSigns from './components/SeaSigns.vue'
 
 export default {
   name: 'App',
   components: {
+    SeaSigns,
     CameraStream
   }
 }
