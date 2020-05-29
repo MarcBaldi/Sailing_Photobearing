@@ -1,8 +1,15 @@
 <template>
   <div id="app">
     <h1>Nearby Nodes</h1>
-    {{ info }}
-    <p>DEBUG:</p>
+    <div
+      v-for="position in info.elements" v-bind:key="position.id"
+      class="position"
+    >
+      id: {{ position.id }}
+      lat: <span class="lighten">{{ position.lat}}</span>
+      lon: <span class="lighten">{{ position.lon}}</span>
+    </div>
+    <p>DEBUG: {{ info }}</p>
   </div>
 </template>
 
@@ -20,14 +27,9 @@ export default {
   },
   mounted () {
     axios
-      .get('http://overpass-api.de/api/interpreter?data=area[name="Bodensee"];nwr["seamark:type"~"^light"](area);out center;')
+      .get('http://overpass-api.de/api/interpreter?data=[out:json][timeout:60];area[name="Konstanz"];nwr["seamark:type"~"^light"](area);out center;')
       .then(response => (this.info = response.data))
       .catch(error => console.log(error))
-  },
-  filters: {
-    currencydecimal (value) {
-      return value.toFixed(2)
-    }
   }
 }
 </script>
