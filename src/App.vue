@@ -3,16 +3,19 @@
     <img id="vue-logo-example" alt="Vue logo" src="./assets/logo.png">
     <CameraStream/>
     <absolute-heading/>
+    <SeaSigns/>
   </div>
 </template>
 
 <script>
 import CameraStream from './components/CameraStream.vue'
+import SeaSigns from './components/SeaSigns.vue'
 import AbsoluteHeading from './components/AbsoluteHeading'
 
 export default {
   name: 'App',
   components: {
+    SeaSigns,
     CameraStream,
     AbsoluteHeading
   }
