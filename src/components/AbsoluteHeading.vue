@@ -2,7 +2,6 @@
     <div class="abs-heading">
       <div id="status">Status: </div>
       <div id="console">...</div>
-      <div id="debug">D: {{ debug_result }}</div>
       <div id="compassContainer">
         <img id="compass" alt="compass WIP" src="../assets/logo2.png"/>
       </div>
@@ -15,14 +14,10 @@ import {
   AbsoluteOrientationSensor
 } from 'motion-sensors-polyfill'
 
-let DisplayResult = ''
 let sensor
 
 export default {
-  name: 'AbsoluteHeading',
-  data () {
-    return { debug_result: DisplayResult }
-  }
+  name: 'AbsoluteHeading'
 }
 
 // request permissions from user;
@@ -51,13 +46,19 @@ function initSensor () {
   const options = { frequency: 60, coordinateSystem: null }
   console.log(JSON.stringify(options))
   sensor = new AbsoluteOrientationSensor(options)
-  sensor.onreading = () => console.log('TEST.')
+  sensor.onreading = () => {
+    const q = sensor.quaternion
+    let heading = Math.atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], 1 - 2 * q[1] * q[1] - 2 * q[2] * q[2]) * (180 / Math.PI)
+    if (heading < 0) heading = 360 + heading
+    const html = 'Heading in degrees: ' + heading
+    console.log(html)
+  }
   sensor.onerror = (event) => {
     if (event.error.name === 'NotReadableError') {
       console.log('Sensor is not available.')
     }
   }
-  sensor.addEventListener('reading', function (e) {
+  /* sensor.addEventListener('reading', function (e) {
     const q = e.target.quaternion
     let heading = Math.atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], 1 - 2 * q[1] * q[1] - 2 * q[2] * q[2]) * (180 / Math.PI)
 
@@ -65,7 +66,7 @@ function initSensor () {
     if (heading < 0) heading = 360 + heading
     html += '<br>Adjusted:   ' + heading
     DisplayResult = html
-  })
+  }) */
   sensor.start()
 }
 
