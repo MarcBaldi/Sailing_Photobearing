@@ -71,7 +71,6 @@ window.addEventListener('load', startup, false)
 <style scoped>
 .camera {
   z-index: 2;
-  margin-top: -180px;
   background-color: lightgray;
 }
 #video {
