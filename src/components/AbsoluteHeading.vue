@@ -5,6 +5,7 @@
       <div id="compassContainer">
         <img id="compass" alt="compass WIP" src="../assets/logo2.png"/>
       </div>
+      <SeaSigns v-bind:myBearing=bearingDegree></SeaSigns>
     </div>
 </template>
 
@@ -13,11 +14,18 @@
 import {
   AbsoluteOrientationSensor
 } from 'motion-sensors-polyfill'
-
-let sensor
+import SeaSigns from './SeaSigns.vue'
 
 export default {
-  name: 'AbsoluteHeading'
+  name: 'AbsoluteHeading',
+  components: {
+    SeaSigns
+  },
+  data () {
+    return {
+      bearingDegree: 0
+    }
+  }
 }
 
 // request permissions from user;
@@ -45,12 +53,13 @@ if (navigator.permissions) {
 function initSensor () {
   const options = { frequency: 60, coordinateSystem: null }
   console.log(JSON.stringify(options))
-  sensor = new AbsoluteOrientationSensor(options)
+  const sensor = new AbsoluteOrientationSensor(options)
   sensor.onreading = () => {
     const q = sensor.quaternion
     let heading = Math.atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], 1 - 2 * q[1] * q[1] - 2 * q[2] * q[2]) * (180 / Math.PI)
     if (heading < 0) heading = 360 + heading
     const html = 'Heading in degrees: ' + heading
+    this.bearingDegree = heading
     console.log(html)
   }
   sensor.onerror = (event) => {

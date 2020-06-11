@@ -25,6 +25,13 @@ import { getRhumbLineBearing } from 'geolib'
 
 export default {
   name: 'SeaSigns',
+  props: {
+    myBearing: {
+      type: Number,
+      required: true,
+      default: 0
+    }
+  },
   data () {
     return {
       info: null
