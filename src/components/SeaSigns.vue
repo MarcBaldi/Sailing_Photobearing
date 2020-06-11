@@ -5,10 +5,12 @@
       v-for="position in info" v-bind:key="position.id"
       class="position"
     >
-      id: {{ position.id }}
-      lat: <span class="lighten">{{ position.lat }}</span>
-      lon: <span class="lighten">{{ position.lon }}</span>
-      Dir: <span class="lighten">{{ withDirection(position.lat, position.lon) }}</span>
+      <div v-show=shouldShow(position)>
+        id: {{ position.id }}
+        lat: <span class="lighten">{{ position.lat }}</span>
+        lon: <span class="lighten">{{ position.lon }}</span>
+        Dir: <span class="lighten">{{ withDirection(position.lat, position.lon) }}</span>
+      </div>
     </div>
     <!--<p>DEBUG: {{ info }}</p> -->
   </div>
@@ -16,8 +18,9 @@
 
 // This component will show SeaMarks nodes near you.
 
-// middle of Bodensee 47.603550, 9.424400
-// geolib.getRhumbLineBearing({ latitude: 52.518611, longitude: 13.408056 },{ latitude: 51.519475, longitude: 7.46694444 });
+// DEBUG:
+// [out:json][timeout:60];area[name="Bodensee"];nwr["seamark:type"~"^light"](area);out center;
+// middle of Bodensee is 47.603550, 9.424400
 
 <script>
 import axios from 'axios'
@@ -48,6 +51,11 @@ export default {
     withDirection: function (lat, lon) {
       // TODO: position of the user
       return getRhumbLineBearing({ latitude: 47.603550, longitude: 9.424400 }, { lat, lon })
+    },
+    shouldShow: function (pos) {
+      const distance = this.myBearing - getRhumbLineBearing({ latitude: 47.603550, longitude: 9.424400 }, { latitude: pos.lat, longitude: pos.lon })
+      console.log(distance)
+      return Math.abs(distance) < 90
     }
   }
 }
