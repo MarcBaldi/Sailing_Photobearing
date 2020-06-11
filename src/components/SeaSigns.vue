@@ -1,11 +1,12 @@
 <template>
   <div id="SeaSigns">
-    <h1>Nearby Nodes</h1>
+    <h1>Nearby Nodes for {{ myBearing }}°</h1>
+    <p v-if="info===null">Loading Nodes...</p>
     <div
       v-for="position in info" v-bind:key="position.id"
       class="position"
     >
-      <div v-show=shouldShow(position)>
+      <div v-show=isNearby(position)>
         id: {{ position.id }}
         lat: <span class="lighten">{{ position.lat }}</span>
         lon: <span class="lighten">{{ position.lon }}</span>
@@ -52,10 +53,10 @@ export default {
       // TODO: position of the user
       return getRhumbLineBearing({ latitude: 47.603550, longitude: 9.424400 }, { lat, lon })
     },
-    shouldShow: function (pos) {
-      const distance = this.myBearing - getRhumbLineBearing({ latitude: 47.603550, longitude: 9.424400 }, { latitude: pos.lat, longitude: pos.lon })
-      console.log(distance)
-      return Math.abs(distance) < 90
+    isNearby: function (pos) {
+      const diffInDegree = this.myBearing - getRhumbLineBearing({ latitude: 47.603550, longitude: 9.424400 }, { latitude: pos.lat, longitude: pos.lon })
+      const precision = 60
+      return (Math.abs(diffInDegree) < precision || Math.abs(diffInDegree) > (360 - precision))
     }
   }
 }

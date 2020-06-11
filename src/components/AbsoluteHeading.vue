@@ -2,10 +2,7 @@
     <div class="abs-heading">
       <div id="status">Status: </div>
       <div id="console">...</div>
-      <div id="compassContainer">
-        <img id="compass" alt="compass WIP" src="../assets/logo2.png"/>
-      </div>
-      <SeaSigns v-bind:myBearing=bearingDegree></SeaSigns>
+      <SeaSigns v-bind:myBearing="bearingDegree"></SeaSigns>
     </div>
 </template>
 
@@ -21,12 +18,10 @@ export default {
   },
   data () {
     return {
-      bearingDegree: 0
+      bearingDegree: 20
     }
   }
 }
-
-let sensor
 
 // request permissions from user;
 if (navigator.permissions) {
@@ -50,17 +45,18 @@ if (navigator.permissions) {
   initSensor()
 }
 
+// TODO: Vue-eize this
 function initSensor () {
-  const options = { frequency: 60, coordinateSystem: null }
-  console.log(JSON.stringify(options))
-  sensor = new AbsoluteOrientationSensor(options)
+  const options = { frequency: 30 }
+  // console.log(JSON.stringify(options))
+  const sensor = new AbsoluteOrientationSensor(options)
   sensor.onreading = () => {
     const q = sensor.quaternion
     let heading = Math.atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], 1 - 2 * q[1] * q[1] - 2 * q[2] * q[2]) * (180 / Math.PI)
     if (heading < 0) heading = 360 + heading
     const html = 'Heading in degrees: ' + heading
-    this.bearingDegree = heading
     console.log(html)
+    this.bearingDegree = heading
   }
   sensor.onerror = (event) => {
     if (event.error.name === 'NotReadableError') {
@@ -93,6 +89,4 @@ console.log = (message, ...rest) => {
   z-index: 3;
   background-color: aqua;
 }
-#compass{
-  width:100%;max-width:400px;}
 </style>
