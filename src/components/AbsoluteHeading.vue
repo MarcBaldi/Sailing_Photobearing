@@ -2,6 +2,9 @@
     <div class="abs-heading">
       <div id="status">Status: </div>
       <div id="console">...</div>
+      <div id="permissionsButton">
+        <button v-on:click=reqPermissions>Request permissions / Start sensors</button>
+      </div>
       <SeaSigns v-bind:myBearing="bearingDegree"></SeaSigns>
     </div>
 </template>
@@ -20,61 +23,55 @@ export default {
     return {
       bearingDegree: 20
     }
-  }
-}
-
-// request permissions from user;
-if (navigator.permissions) {
-  // https://w3c.github.io/orientation-sensor/#model
-  Promise.all([navigator.permissions.query({ name: 'accelerometer' }),
-    navigator.permissions.query({ name: 'magnetometer' }),
-    navigator.permissions.query({ name: 'gyroscope' })])
-    .then(results => {
-      if (results.every(result => result.state === 'granted')) {
-        initSensor()
+  },
+  methods: {
+    reqPermissions () {
+      // request permissions from user;
+      if (navigator.permissions) {
+        // https://w3c.github.io/orientation-sensor/#model
+        Promise.all([navigator.permissions.query({ name: 'accelerometer' }),
+          navigator.permissions.query({ name: 'magnetometer' }),
+          navigator.permissions.query({ name: 'gyroscope' })])
+          .then(results => {
+            if (results.every(result => result.state === 'granted')) {
+              this.initSensor()
+            } else {
+              console.log('Permission to use sensor was denied.')
+            }
+          }).catch(err => {
+            console.log('Integration with Permissions API is not enabled, still try to start app.')
+            console.log(err)
+            this.initSensor()
+          })
       } else {
-        console.log('Permission to use sensor was denied.')
+        console.log('No Permissions API, still try to start app.')
+        this.initSensor()
       }
-    }).catch(err => {
-      console.log('Integration with Permissions API is not enabled, still try to start app.')
-      console.log(err)
-      initSensor()
-    })
-} else {
-  console.log('No Permissions API, still try to start app.')
-  initSensor()
-}
-
-// TODO: Vue-eize this
-function initSensor () {
-  const options = { frequency: 30 }
-  // console.log(JSON.stringify(options))
-  const sensor = new AbsoluteOrientationSensor(options)
-  sensor.onreading = () => {
-    const q = sensor.quaternion
-    let heading = Math.atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], 1 - 2 * q[1] * q[1] - 2 * q[2] * q[2]) * (180 / Math.PI)
-    if (heading < 0) heading = 360 + heading
-    const html = 'Heading in degrees: ' + heading
-    console.log(html)
-    this.bearingDegree = heading
-  }
-  sensor.onerror = (event) => {
-    if (event.error.name === 'NotReadableError') {
-      console.log('Sensor is not available.')
+    },
+    initSensor () {
+      const options = { frequency: 30 }
+      const reqButton = document.querySelector('#permissionsButton')
+      reqButton.remove()
+      const sensor = new AbsoluteOrientationSensor(options)
+      sensor.onreading = () => {
+        const q = sensor.quaternion
+        let heading = Math.atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], 1 - 2 * q[1] * q[1] - 2 * q[2] * q[2]) * (180 / Math.PI)
+        if (heading < 0) heading = 360 + heading
+        const html = 'Heading in degrees: ' + heading.toFixed(1)
+        console.log(html)
+        this.bearingDegree = heading.toFixed(1)
+      }
+      sensor.onerror = (event) => {
+        if (event.error.name === 'NotReadableError') {
+          console.log('Sensor is not available.')
+        }
+      }
+      sensor.start()
     }
   }
-  /* sensor.addEventListener('reading', function (e) {
-    const q = e.target.quaternion
-    let heading = Math.atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], 1 - 2 * q[1] * q[1] - 2 * q[2] * q[2]) * (180 / Math.PI)
-
-    let html = 'Heading in degrees: ' + heading
-    if (heading < 0) heading = 360 + heading
-    html += '<br>Adjusted:   ' + heading
-    DisplayResult = html
-  }) */
-  sensor.start()
 }
 
+console.log('From now on: copying console output to screen for mobile users.')
 const log = console.log
 console.log = (message, ...rest) => {
   const div = document.querySelector('#console')

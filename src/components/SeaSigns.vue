@@ -55,7 +55,7 @@ export default {
     },
     isNearby: function (pos) {
       const diffInDegree = this.myBearing - getRhumbLineBearing({ latitude: 47.603550, longitude: 9.424400 }, { latitude: pos.lat, longitude: pos.lon })
-      const precision = 60
+      const precision = 30
       return (Math.abs(diffInDegree) < precision || Math.abs(diffInDegree) > (360 - precision))
     }
   }
