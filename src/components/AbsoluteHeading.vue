@@ -57,8 +57,8 @@ export default {
         const q = sensor.quaternion
         let heading = Math.atan2(2 * q[0] * q[1] + 2 * q[2] * q[3], 1 - 2 * q[1] * q[1] - 2 * q[2] * q[2]) * (180 / Math.PI)
         if (heading < 0) heading = 360 + heading
-        const html = 'Heading in degrees: ' + heading.toFixed(1)
-        console.log(html)
+        // const html = 'Heading in degrees: ' + heading.toFixed(1)
+        // console.log(html)
         this.bearingDegree = heading.toFixed(1)
       }
       sensor.onerror = (event) => {
@@ -75,7 +75,10 @@ console.log('From now on: copying console output to screen for mobile users.')
 const log = console.log
 console.log = (message, ...rest) => {
   const div = document.querySelector('#console')
-  div.innerText = message
+  const node = document.createElement('P')
+  const textNode = document.createTextNode(message)
+  node.appendChild(textNode)
+  div.appendChild(node)
   log.call(console, message, ...rest)
 }
 
