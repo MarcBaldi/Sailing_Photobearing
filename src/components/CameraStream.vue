@@ -1,5 +1,5 @@
 <template>
-  <div class="camera">
+  <div class="camera-container">
     <video id="video" ref="video" v-on:canplay="startStream">Your browser does not support the video tag.</video>
   </div>
 </template>
@@ -9,16 +9,14 @@ export default {
   name: 'CameraStream',
   data () {
     return {
-      width: 412, // Samsung Galaxy s10+
-      height: 869, // Samsung Galaxy s10+
+      width: screen.availWidth,
+      height: screen.availHeight,
       streaming: false,
       video: null
     }
   },
   methods: {
     startUp () {
-      // TODO: set width and height dynamically
-
       navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
@@ -39,19 +37,10 @@ export default {
     },
     startStream () {
       if (!this.streaming) {
-        /* this.height = this.video.videoHeight / (this.video.videoWidth / this.width)
-
-        // Firefox currently has a bug where the height can't be read from
-        // the video, so we will make assumptions if this happens.
-
-        if (isNaN(this.height)) {
-          this.height = this.width / (4 / 3)
-          console.log('Using Firefox? Assuming 4/3 Ratio')
-        } */
-
         this.video.setAttribute('width', this.width)
         this.video.setAttribute('height', this.height)
         this.streaming = true
+        // console.log('Stream: Width: ' + this.video.width + 'Height:' + this.video.height)
       }
     }
   },
@@ -64,7 +53,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.camera {
+.camera-container {
   background-color: lightgray;
 }
 #video {
