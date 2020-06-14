@@ -86,7 +86,6 @@ console.log = (message, ...rest) => {
 
 <style scoped>
 .abs-heading {
-  z-index: 3;
-  background-color: aqua;
+  background-color: bisque;
 }
 </style>

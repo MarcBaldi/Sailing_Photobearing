@@ -9,8 +9,8 @@ export default {
   name: 'CameraStream',
   data () {
     return {
-      width: screen.availWidth,
-      height: screen.availHeight,
+      width: screen.height < screen.width ? screen.availWidth : screen.availHeight,
+      height: screen.height > screen.width ? screen.availWidth : screen.availHeight,
       streaming: false,
       video: null
     }
@@ -20,7 +20,9 @@ export default {
       navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
-          facingMode: 'environment'
+          width: { ideal: this.width },
+          height: { ideal: this.height },
+          facingMode: { ideal: 'environment' }
         }
       })
         .then(function (stream) {
@@ -57,5 +59,10 @@ export default {
   background-color: lightgray;
 }
 #video {
+  background-color: darkgray;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  overflow: hidden;
 }
 </style>
