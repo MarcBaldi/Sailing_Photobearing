@@ -5,12 +5,11 @@
       <div id="permissionsButton">
         <button v-on:click=reqPermissions>Request permissions / Start sensors</button>
       </div>
-      <SeaSigns v-bind:myBearing="bearingDegree"></SeaSigns>
+      <sea-signs v-bind:myBearing="bearingDegree"></sea-signs>
     </div>
 </template>
 
 <script>
-
 import { AbsoluteOrientationSensor } from 'motion-sensors-polyfill'
 import SeaSigns from './SeaSigns.vue'
 
@@ -81,7 +80,6 @@ console.log = (message, ...rest) => {
   div.appendChild(node)
   log.call(console, message, ...rest)
 }
-
 </script>
 
 <style scoped>

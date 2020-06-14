@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <CameraStream/>
+    <camera-stream/>
     <absolute-heading/>
   </div>
 </template>
