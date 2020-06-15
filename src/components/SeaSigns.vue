@@ -64,6 +64,5 @@ export default {
 
 <style scoped>
 #SeaSigns{
-  background-color: antiquewhite;
 }
 </style>

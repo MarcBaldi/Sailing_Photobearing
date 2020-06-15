@@ -84,6 +84,7 @@ console.log = (message, ...rest) => {
 
 <style scoped>
 .abs-heading {
-  background-color: bisque;
+  position: absolute;
+  z-index: 2;
 }
 </style>
