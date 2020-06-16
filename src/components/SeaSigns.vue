@@ -1,27 +1,25 @@
 <template>
   <div id="SeaSigns">
     <h1>Nearby Nodes for {{ myBearing }}°</h1>
-    <p v-if="info===null">Loading Nodes...</p>
+    <p v-if="overpass===null">Loading Nodes...</p>
     <div
-      v-for="position in info" v-bind:key="position.id"
+      v-for="position in overpass" v-bind:key="position.id"
       class="position"
     >
       <div v-show=isNearby(position)>
         id: {{ position.id }}
-        lat: <span class="lighten">{{ position.lat }}</span>
-        lon: <span class="lighten">{{ position.lon }}</span>
-        Dir: <span class="lighten">{{ withDirection(position.lat, position.lon) }}</span>
+        Dir: {{ withDirection(position.lat, position.lon) }}
       </div>
     </div>
-    <!--<p>DEBUG: {{ info }}</p> -->
+    <!--<p>DEBUG: {{ overpass }}</p> -->
   </div>
 </template>
 
 // This component will show SeaMarks nodes near you.
 
-// DEBUG:
-// [out:json][timeout:60];area[name="Bodensee"];nwr["seamark:type"~"^light"](area);out center;
-// middle of Bodensee is 47.603550, 9.424400
+// DEBUG: if devMode is enabled, myPostition will be Lake Constance
+// [out:json][timeout:60];nwr["seamark:type"~"^light"](around:20000.0,47.603550,9.424400);out center;
+// Lake Constance is 47.603550, 9.424400
 
 <script>
 import axios from 'axios'
@@ -38,25 +36,51 @@ export default {
   },
   data () {
     return {
-      info: null
+      overpass: null,
+      range: 20000.0,
+      precision: 30,
+      myPosition: null,
+      devMode: true
     }
   },
   mounted () {
-    // TODO: parameterize query
-    axios
-      .get('http://overpass-api.de/api/interpreter?data=[out:json][timeout:60];area[name="Bodensee"];nwr["seamark:type"~"^light"](area);out center;')
-      .then(response => (this.info = response.data.elements))
-      .catch(error => console.log(error))
+    this.startGps()
   },
   methods: {
+    startGps: function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.gpsSuccess(position)
+        })
+      } else {
+        console.log('Error: cannot access geolocation API, using default position')
+        this.myPosition = { coords: { latitude: 47.603550, longitude: 9.424400 } }
+        this.querySeamarks()
+      }
+    },
+    gpsSuccess: function (position) {
+      this.myPosition = position
+      if (this.devMode) {
+        this.myPosition = { coords: { latitude: 47.603550, longitude: 9.424400 } }
+      }
+      this.querySeamarks()
+    },
+    querySeamarks: function () {
+      const baseUrl = 'http://overpass-api.de/api/interpreter'
+      const filter = 'nwr["seamark:type"~"^light"]'
+      const area = '(around:' + this.range + ',' + this.myPosition.coords.latitude + ',' + this.myPosition.coords.longitude + ')'
+      const query = '?data=[out:json][timeout:60];' + filter + area + ';out center;'
+      axios
+        .get(baseUrl + query)
+        .then(response => (this.overpass = response.data.elements))
+        .catch(error => console.log(error))
+    },
     withDirection: function (lat, lon) {
-      // TODO: position of the user
-      return getRhumbLineBearing({ latitude: 47.603550, longitude: 9.424400 }, { lat, lon })
+      return getRhumbLineBearing({ latitude: this.myPosition.coords.latitude, longitude: this.myPosition.coords.longitude }, { lat, lon })
     },
     isNearby: function (pos) {
-      const diffInDegree = this.myBearing - getRhumbLineBearing({ latitude: 47.603550, longitude: 9.424400 }, { latitude: pos.lat, longitude: pos.lon })
-      const precision = 30
-      return (Math.abs(diffInDegree) < precision || Math.abs(diffInDegree) > (360 - precision))
+      const diffInDegree = this.myBearing - this.withDirection(pos.lat, pos.lon)
+      return (Math.abs(diffInDegree) < this.precision || Math.abs(diffInDegree) > (360 - this.precision))
     }
   }
 }
