@@ -1,7 +1,7 @@
 <template>
     <div class="abs-heading">
-      <div id="status">Status: </div>
-      <div id="console">...</div>
+      <div id="status" v-show="devMode">Status: </div>
+      <div id="console" v-show="devMode">...</div>
       <div id="permissionsButton">
         <button v-on:click=reqPermissions>Request permissions / Start sensors</button>
       </div>
@@ -20,7 +20,8 @@ export default {
   },
   data () {
     return {
-      bearingDegree: 20
+      bearingDegree: 20,
+      devMode: true
     }
   },
   methods: {

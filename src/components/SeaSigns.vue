@@ -7,8 +7,10 @@
       class="position"
     >
       <div v-show=isNearby(position)>
-        id: {{ position.id }}
-        Dir: {{ withDirection(position.lat, position.lon) }}
+        <sea-sign-poi class="sea-sign-poi"
+                      :poiDir="withDirection(position.lat, position.lon) - myBearing"
+                      :poiId="position.id"
+                      v-on:open-poi-info="openInfo"></sea-sign-poi>
       </div>
     </div>
     <!--<p>DEBUG: {{ overpass }}</p> -->
@@ -24,9 +26,13 @@
 <script>
 import axios from 'axios'
 import { getRhumbLineBearing } from 'geolib'
+import SeaSignPoi from './SeaSignPoi.vue'
 
 export default {
   name: 'SeaSigns',
+  components: {
+    SeaSignPoi
+  },
   props: {
     myBearing: {
       type: Number,
@@ -81,6 +87,10 @@ export default {
     isNearby: function (pos) {
       const diffInDegree = this.myBearing - this.withDirection(pos.lat, pos.lon)
       return (Math.abs(diffInDegree) < this.precision || Math.abs(diffInDegree) > (360 - this.precision))
+    },
+    openInfo: function (id) {
+      // TODO:
+      console.log('open info- id: ' + id)
     }
   }
 }
@@ -88,5 +98,7 @@ export default {
 
 <style scoped>
 #SeaSigns{
+}
+.sea-sign-poi{
 }
 </style>
