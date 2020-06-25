@@ -28,7 +28,7 @@ export default {
       // fixme: magic number
       const offset = this.poiDir < 180 ? this.poiDir : this.poiDir - 360
       return {
-        right: offset + '%'
+        right: offset * 5 + '%'
       }
     }
   }
