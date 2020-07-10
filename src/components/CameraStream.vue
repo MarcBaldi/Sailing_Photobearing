@@ -1,6 +1,11 @@
 <template>
   <div class="camera-container">
-    <video id="video" ref="video" v-on:canplay="startStream">Your browser does not support the video tag.</video>
+    <div class="video-container">
+      <video id="video" ref="video" v-on:canplay="startStream" v-on:click="takeSnapshot">Your browser does not support the video tag.</video>
+    </div>
+    <div class="canvas-container" v-show="showCanvas">
+      <canvas id="canvas" ref="canvas" v-on:click="hideSnapshot"></canvas>
+    </div>
   </div>
 </template>
 
@@ -11,15 +16,21 @@ export default {
   name: 'CameraStream',
   data () {
     return {
-      width: screen.height < screen.width ? screen.availWidth : screen.availHeight,
-      height: screen.height > screen.width ? screen.availWidth : screen.availHeight,
+      // width: screen.height < screen.width ? screen.availWidth : screen.availHeight,
+      // height: screen.height > screen.width ? screen.availWidth : screen.availHeight,
+      width: screen.availWidth,
+      height: screen.availHeight,
       streaming: false,
-      video: null
+      video: null,
+      canvas: null,
+      showCanvas: false
     }
   },
   mounted () {
     this.video = document.getElementById('video')
+    this.canvas = document.getElementById('canvas')
     this.initCamera()
+    this.initCanvas()
   },
   methods: {
     initCamera () {
@@ -43,12 +54,24 @@ export default {
           }
         })
     },
+    initCanvas () {
+      this.canvas.display = 'none'
+      this.canvas.width = screen.availWidth
+      this.canvas.height = screen.availHeight
+    },
     startStream () {
       if (!this.streaming) {
         this.video.setAttribute('width', this.width)
         this.video.setAttribute('height', this.height)
         this.streaming = true
       }
+    },
+    takeSnapshot () {
+      this.canvas.getContext('2d').drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
+      this.showCanvas = true
+    },
+    hideSnapshot () {
+      this.showCanvas = false
     }
   }
 }
@@ -56,12 +79,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.camera-container {
+.camera-container{
+  position: absolute;
+}
+.video-container{
   position: absolute;
   z-index: 0;
   background-color: lightgray;
 }
-#video {
+.canvas-container{
+  position: absolute;
+  z-index: 10;
+  background-color: lightgray;
+}
+#video #canvas{
   height: 100vh;
   width: 100vw;
   object-fit: cover;
