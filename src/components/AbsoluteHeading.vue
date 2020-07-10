@@ -1,10 +1,7 @@
 <template>
-    <div class="abs-heading">
+    <div id="absolute-heading">
       <div id="status" v-show="devMode">Status: </div>
       <div id="console" v-show="devMode">...</div>
-      <div id="permissionsButton">
-        <button v-on:click=reqPermissions>Request permissions / Start sensors</button>
-      </div>
       <sea-signs v-bind:myBearing="bearingDegree"></sea-signs>
     </div>
 </template>
@@ -23,6 +20,9 @@ export default {
       bearingDegree: 20,
       devMode: true
     }
+  },
+  mounted () {
+    this.reqPermissions()
   },
   methods: {
     reqPermissions () {
@@ -50,8 +50,6 @@ export default {
     },
     initSensor () {
       const options = { frequency: 30 }
-      const reqButton = document.querySelector('#permissionsButton')
-      reqButton.remove()
       const sensor = new AbsoluteOrientationSensor(options)
       sensor.onreading = () => {
         const q = sensor.quaternion
@@ -84,8 +82,10 @@ console.log = (message, ...rest) => {
 </script>
 
 <style scoped>
-.abs-heading {
+#absolute-heading {
   position: absolute;
+  width: 100vw;
+  height: 100vh;
   z-index: 2;
 }
 </style>
