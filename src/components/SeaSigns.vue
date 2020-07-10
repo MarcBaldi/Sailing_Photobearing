@@ -99,6 +99,4 @@ export default {
 </script>
 
 <style scoped>
-#SeaSigns{
-}
 </style>

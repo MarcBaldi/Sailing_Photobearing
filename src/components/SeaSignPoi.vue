@@ -36,11 +36,15 @@ export default {
 <style scoped>
 #SeaSignPoi{
   position: absolute;
-  top:30%;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  overflow: hidden;
 }
 #poi-img{
   width: 2em;
   height: 2em;
   position: relative;
+  top:30%;
 }
 </style>
