@@ -1,14 +1,10 @@
 <template>
-  <div id="SeaSigns">
+  <div>
     <h1>Nearby Nodes for {{ myBearing }}°</h1>
     <p v-if="overpass===null">Loading Nodes...</p>
-    <div
-      v-for="position in overpass" v-bind:key="position.id"
-      class="position"
-    >
+    <div v-for="position in overpass" v-bind:key="position.id">
       <div v-show=isNearby(position)>
-        <sea-sign-poi class="sea-sign-poi"
-                      :poiDir="withDirection(position.lat, position.lon) - myBearing"
+        <sea-sign-poi :poiDir="withDirection(position.lat, position.lon) - myBearing"
                       :poiId="position.id"
                       v-on:selected-poi="poiInfo"></sea-sign-poi>
       </div>
@@ -19,7 +15,7 @@
 
 // This component will query SeaMarks nodes near you, based on your gps location.
 
-// DEBUG: if devMode is enabled, myPostition will be Lake Constance
+// DEBUG: if devMode is enabled, myPosition will be Lake Constance
 // [out:json][timeout:60];nwr["seamark:type"~"^light"](around:20000.0,47.603550,9.424400);out center;
 // Lake Constance is 47.603550, 9.424400
 
@@ -88,9 +84,9 @@ export default {
       return (Math.abs(diffInDegree) < this.precision || Math.abs(diffInDegree) > (360 - this.precision))
     },
     poiInfo: function (poiId) {
-      // TODO: test distance calculation
+      // TODO: fix distance calculation
       const poiPosition = this.overpass.find(x => x.id === poiId)
-      const poiDist = getDistance(this.myPosition, poiPosition)
+      const poiDist = getDistance(this.myPosition.coords, poiPosition)
       console.log('Poi-id ' + poiId + ' was selected. Distance: ' + poiDist)
       // TODO: open photo-bearing screen from here - and pass information about poi
     }

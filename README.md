@@ -1,5 +1,9 @@
 # sailing_vue
 
+The Augmented Reality App for Seasigns.
+
+Using Seamarks from OpenStreetMap!
+
 ## Project setup
 ```
 npm install

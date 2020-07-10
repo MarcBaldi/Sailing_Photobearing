@@ -4,6 +4,8 @@
   </div>
 </template>
 
+// This component streams the environment camera of the device as a background on the screen
+
 <script>
 export default {
   name: 'CameraStream',
@@ -15,8 +17,12 @@ export default {
       video: null
     }
   },
+  mounted () {
+    this.video = document.getElementById('video')
+    this.initCamera()
+  },
   methods: {
-    startUp () {
+    initCamera () {
       navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
@@ -31,7 +37,7 @@ export default {
         }.bind(this))
         .catch(function (err) {
           if (err === 'NotAllowedError') {
-            console.log('Maybe not in secure context. Error: ' + err)
+            console.log('Maybe not in secure context(HTTPS)? Error: ' + err)
           } else {
             console.log('An error occurred: ' + err)
           }
@@ -42,13 +48,8 @@ export default {
         this.video.setAttribute('width', this.width)
         this.video.setAttribute('height', this.height)
         this.streaming = true
-        // console.log('Stream: Width: ' + this.video.width + 'Height:' + this.video.height)
       }
     }
-  },
-  mounted () {
-    this.video = document.getElementById('video')
-    this.startUp()
   }
 }
 </script>
@@ -61,7 +62,6 @@ export default {
   background-color: lightgray;
 }
 #video {
-  background-color: darkgray;
   height: 100vh;
   width: 100vw;
   object-fit: cover;
