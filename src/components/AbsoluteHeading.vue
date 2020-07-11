@@ -88,6 +88,11 @@ console.log = (message, ...rest) => {
   position: absolute;
   width: 100vw;
   height: 100vh;
+}
+#console{
+  z-index: 2;
+}
+#status{
   z-index: 2;
 }
 </style>
