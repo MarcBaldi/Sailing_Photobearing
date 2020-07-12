@@ -17,7 +17,7 @@ export default {
   },
   data () {
     return {
-      deviceRotation: 20,
+      deviceRotation: 35,
       devMode: true
     }
   },
