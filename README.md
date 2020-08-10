@@ -1,5 +1,4 @@
-# sailing_vue
-
+# Sailing vue has moved
 This project has moved to [Progressive Sailing](https://gitlab.com/ju851zel/progressive_sailing)
 and is further developed there.
 
